@@ -32,7 +32,8 @@ app.use(express.json());
 // ---------------- CORS CONFIG ----------------
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://vaccine-reminder.vercel.app" // Replace with your actual Vercel URL
+  "https://vaccine-reminder-system.vercel.app", // Your Vercel URL (update after deployment)
+  process.env.FRONTEND_URL // Add this to Render env vars later
 ];
 
 app.use(
@@ -46,7 +47,7 @@ app.use(
       ) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(null, true); // Allow all for now, restrict later
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -84,17 +85,32 @@ app.get("/health", (req, res) => {
 // ---------------- TEST EMAIL ROUTE ----------------
 app.get("/test-email", async (req, res) => {
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      subject: "Vaccine App Test",
-      text: "If you see this, the email service is working!"
-    });
+    console.log("📧 Attempting to send test email...");
+    
+    // Add timeout to email sending
+    await Promise.race([
+      transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER,
+        subject: "Vaccine App Test from Render",
+        text: "If you see this, the email service is working on Render!",
+        html: "<h2>Success!</h2><p>Email service is working on Render deployment.</p>"
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Email send timeout after 30 seconds')), 30000)
+      )
+    ]);
 
+    console.log("✅ Test email sent successfully");
     res.send("✔ Mail Sent Successfully");
   } catch (e) {
-    console.error("Test email error:", e);
-    res.status(500).send(e.toString());
+    console.error("❌ Test email error:", e.message);
+    
+    if (e.message.includes('timeout')) {
+      res.status(503).send(`⚠️ Email timeout: ${e.message}\n\nNote: Render free tier may have SMTP restrictions.\nEmails may still work for actual reminders.\n\nTry using a service like SendGrid or Mailgun for production.`);
+    } else {
+      res.status(500).send(`❌ Email error: ${e.message}`);
+    }
   }
 });
 

@@ -29,18 +29,32 @@ const transporter = nodemailer.createTransport({
     pass: emailPass,
   },
   tls: {
-    rejectUnauthorized: false // Helps with local network issues
-  }
+    rejectUnauthorized: false
+  },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 });
 
-// Verify connection
-transporter.verify((error, success) => {
-  if (error) {
+// Verify connection with timeout
+const verifyConnection = async () => {
+  try {
+    await Promise.race([
+      transporter.verify(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Connection timeout')), 10000)
+      )
+    ]);
+    console.log("✅ Gmail service ready - Real emails will be sent to", emailUser);
+  } catch (error) {
     console.log("❌ Gmail authentication failed:", error.message);
     console.log("💡 Check your App Password at https://myaccount.google.com/apppasswords");
-  } else {
-    console.log("✅ Gmail service ready - Real emails will be sent to", emailUser);
+    console.log("⚠️  Note: Render free tier may have SMTP restrictions");
+    console.log("📧 Emails will still be attempted when triggered");
   }
-});
+};
+
+// Don't block startup if verification fails
+verifyConnection();
 
 export default transporter;
