@@ -5,9 +5,6 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
-// Import services to ensure they start running
-import "./services/reminderService.js";
-
 // ROUTES imports
 import userRoutes from "./routes/userRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
@@ -25,6 +22,7 @@ console.log("-----------------------------------");
 console.log("📧 Email Config Check:");
 console.log("USER =", process.env.EMAIL_USER);
 console.log("PASS =", process.env.EMAIL_PASS ? "OK (Hidden)" : "NOT FOUND");
+console.log("NODE_ENV =", process.env.NODE_ENV || "development");
 console.log("-----------------------------------");
 
 // ---------------- CREATE APP ----------------
@@ -34,7 +32,7 @@ app.use(express.json());
 // ---------------- CORS CONFIG ----------------
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://vaccine-reminder.vercel.app" // Replace with your actual Vercel URL after deployment
+  "https://vaccine-reminder.vercel.app" // Replace with your actual Vercel URL
 ];
 
 app.use(
@@ -56,9 +54,6 @@ app.use(
   })
 );
 
-// CONNECT DATABASE
-connectDB();
-
 // ------------------ ROUTES ------------------
 app.use("/api/users", userRoutes);
 app.use("/api/profiles", profileRoutes);
@@ -69,8 +64,25 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/export", exportRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
+// ---------------- HEALTH CHECK ----------------
+app.get("/", (req, res) => {
+  res.json({ 
+    status: "ok", 
+    message: "Vaccine Reminder API is running",
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get("/health", (req, res) => {
+  res.json({ 
+    status: "healthy",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
+});
+
 // ---------------- TEST EMAIL ROUTE ----------------
-app.get("/test-email", async (_, res) => {
+app.get("/test-email", async (req, res) => {
   try {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -81,12 +93,13 @@ app.get("/test-email", async (_, res) => {
 
     res.send("✔ Mail Sent Successfully");
   } catch (e) {
+    console.error("Test email error:", e);
     res.status(500).send(e.toString());
   }
 });
 
 // ---------------- MANUAL REMINDER TRIGGER ----------------
-app.get("/trigger-reminders", async (_, res) => {
+app.get("/trigger-reminders", async (req, res) => {
   try {
     const Vaccine = (await import("./models/vaccineModel.js")).default;
     const Profile = (await import("./models/profileModel.js")).default;
@@ -130,12 +143,7 @@ app.get("/trigger-reminders", async (_, res) => {
           from: `"Vaccine Reminder System" <${process.env.EMAIL_USER}>`,
           to: user.email,
           subject: `🔔 Custom Reminder: ${vaccine.vaccineName} for ${profile.name}`,
-          text: `Hi ${user.name},
-
-Reminder for ${vaccine.vaccineName}
-Due Date: ${vaccine.dueDate.toLocaleDateString()}
-
-Please make sure to complete it on time.`,
+          text: `Hi ${user.name},\n\nReminder for ${vaccine.vaccineName}\nDue Date: ${vaccine.dueDate.toLocaleDateString()}\n\nPlease make sure to complete it on time.`,
           html: `
             <h2>🔔 Vaccine Reminder</h2>
             <p><strong>Vaccine:</strong> ${vaccine.vaccineName}</p>
@@ -163,6 +171,7 @@ Please make sure to complete it on time.`,
       results
     });
   } catch (e) {
+    console.error("Trigger reminders error:", e);
     res.status(500).json({ error: e.toString() });
   }
 });
@@ -172,9 +181,54 @@ app.use((req, res) =>
   res.status(404).json({ message: "Route Not Found" })
 );
 
-// ---------------- START SERVER ----------------
+// ---------------- ERROR HANDLER ----------------
+app.use((err, req, res, next) => {
+  console.error("Global error handler:", err);
+  res.status(500).json({ 
+    error: "Internal Server Error",
+    message: err.message 
+  });
+});
+
+// ---------------- STARTUP SEQUENCE ----------------
 const PORT = process.env.PORT || 5050;
 
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on Port ${PORT}`)
-);
+async function startServer() {
+  try {
+    console.log("🔄 Starting server...");
+    
+    // 1. Connect to MongoDB FIRST
+    console.log("📦 Connecting to MongoDB...");
+    await connectDB();
+    console.log("✅ MongoDB connected");
+    
+    // 2. Start Express server
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on Port ${PORT}`);
+      console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
+    });
+    
+    // 3. Import reminder service AFTER everything is ready
+    console.log("⏰ Initializing reminder service...");
+    await import("./services/reminderService.js");
+    console.log("✅ Reminder service loaded");
+    
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
+}
+
+// Handle uncaught errors
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+// Start the server
+startServer();

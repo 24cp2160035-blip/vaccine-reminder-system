@@ -3,6 +3,7 @@ import transporter from "./mailer.js";
 import Vaccine from "../models/vaccineModel.js";
 import Profile from "../models/profileModel.js";
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString("en-IN", {
@@ -11,6 +12,11 @@ const formatDate = (date) => {
     year: "numeric",
   });
 };
+
+// Check if MongoDB is connected before starting cron jobs
+if (mongoose.connection.readyState !== 1) {
+  console.warn("⚠️  Reminder service loaded but MongoDB not connected yet");
+}
 
 console.log("⏰ Smart Reminder Service Loaded");
 console.log("📋 Active Cron Jobs:");
@@ -22,6 +28,12 @@ console.log("-----------------------------------");
 
 // HOURLY CRON - Check for reminders
 cron.schedule("0 * * * *", async () => {
+  // Safety check: ensure MongoDB is connected
+  if (mongoose.connection.readyState !== 1) {
+    console.warn("⚠️  Skipping profile reminders - MongoDB not connected");
+    return;
+  }
+  
   const now = new Date();
   const currentTime = now.toTimeString().slice(0, 5);
 
@@ -108,6 +120,12 @@ Vaccine Reminder System`;
 
 // MIDNIGHT CRON - Update overdue statuses
 cron.schedule("0 0 * * *", async () => {
+  // Safety check
+  if (mongoose.connection.readyState !== 1) {
+    console.warn("⚠️  Skipping status update - MongoDB not connected");
+    return;
+  }
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
@@ -124,6 +142,12 @@ cron.schedule("0 0 * * *", async () => {
 
 // DAILY CRON at 8 AM - Send overdue alerts
 cron.schedule("0 8 * * *", async () => {
+  // Safety check
+  if (mongoose.connection.readyState !== 1) {
+    console.warn("⚠️  Skipping overdue alerts - MongoDB not connected");
+    return;
+  }
+  
   console.log("🚨 Checking for overdue vaccines...");
   
   try {
@@ -206,6 +230,12 @@ Vaccine Reminder System`;
 
 // NEW: HOURLY CRON - Check custom "Remind Me" dates with specific times
 cron.schedule("0 * * * *", async () => {
+  // Safety check
+  if (mongoose.connection.readyState !== 1) {
+    console.warn("⚠️  Skipping custom reminders - MongoDB not connected");
+    return;
+  }
+  
   const now = new Date();
   const currentTime = now.toTimeString().slice(0, 5); // "HH:MM"
   
