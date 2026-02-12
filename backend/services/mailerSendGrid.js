@@ -10,22 +10,37 @@ console.log("-----------------------------------");
 const apiKey = process.env.SENDGRID_API_KEY?.trim();
 const fromEmail = process.env.EMAIL_USER?.trim();
 
-console.log("SendGrid API Key:", apiKey ? "✓ Found" : "✗ Missing");
+console.log("SendGrid API Key:", apiKey ? `✓ Found (${apiKey.substring(0, 10)}...)` : "✗ Missing");
+console.log("API Key Length:", apiKey?.length || 0);
 console.log("From Email:", fromEmail);
 
 if (!apiKey) {
   console.error("❌ ERROR: SENDGRID_API_KEY not found in environment variables!");
-  console.error("Get your API key from: https://app.sendgrid.com/settings/api_keys");
+  console.error("Available env vars:", Object.keys(process.env).filter(k => k.includes('SEND')));
 }
 
 if (apiKey) {
-  sgMail.setApiKey(apiKey);
+  try {
+    sgMail.setApiKey(apiKey);
+    console.log("✅ SendGrid API key set successfully");
+  } catch (error) {
+    console.error("❌ Error setting SendGrid API key:", error.message);
+  }
 }
 
 // Create a transporter-like interface to match nodemailer
 const transporter = {
   sendMail: async ({ from, to, subject, text, html }) => {
+    if (!apiKey) {
+      throw new Error('SendGrid API key not configured');
+    }
+    
     try {
+      console.log(`📤 Sending email via SendGrid...`);
+      console.log(`   From: ${from || fromEmail}`);
+      console.log(`   To: ${to}`);
+      console.log(`   Subject: ${subject}`);
+      
       const msg = {
         to,
         from: from || fromEmail,
@@ -39,15 +54,16 @@ const transporter = {
       return { messageId: response[0].headers['x-message-id'] };
     } catch (error) {
       console.error('❌ SendGrid error:', error.message);
+      console.error('Error code:', error.code);
       if (error.response) {
-        console.error('Response body:', error.response.body);
+        console.error('Response status:', error.response.statusCode);
+        console.error('Response body:', JSON.stringify(error.response.body, null, 2));
       }
       throw error;
     }
   },
   
   verify: async () => {
-    // SendGrid doesn't have a verify method, so we just check if API key is set
     if (!apiKey) {
       throw new Error('SendGrid API key not configured');
     }
