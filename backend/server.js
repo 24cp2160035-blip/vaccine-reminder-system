@@ -15,7 +15,7 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 
-import transporter from "./services/mailer.js";
+import transporter from "./services/mailerSendGrid.js";
 
 // Debug logs
 console.log("-----------------------------------");

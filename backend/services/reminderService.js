@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import transporter from "./mailer.js";
+import transporter from "./mailerSendGrid.js";
 import Vaccine from "../models/vaccineModel.js";
 import Profile from "../models/profileModel.js";
 import User from "../models/userModel.js";
