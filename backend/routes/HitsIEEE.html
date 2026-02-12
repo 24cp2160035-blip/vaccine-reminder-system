@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEEE Student Branch - HITS</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- HITS BRANDING VARIABLES --- */
+        :root {
+            --hits-blue: #002147; /* The official Royal Blue */
+            --hits-gold: #ffc107; /* Warning yellow/gold */
+            --text-grey: #555;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+        }
+
+        /* --- TOP BAR --- */
+        .top-bar {
+            background-color: #f1f1f1;
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .top-bar a {
+            color: var(--hits-blue);
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            background-color: var(--hits-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff !important;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.85) !important;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 14px;
+            padding: 15px !important;
+            transition: 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--hits-gold) !important;
+            background-color: rgba(255,255,255,0.1);
+        }
+        .dropdown-menu {
+            border-top: 3px solid var(--hits-gold);
+            border-radius: 0;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            background: linear-gradient(rgba(0, 33, 71, 0.8), rgba(0, 33, 71, 0.6)), url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        .hero-btn {
+            background-color: var(--hits-gold);
+            color: var(--hits-blue);
+            font-weight: bold;
+            border: none;
+            padding: 12px 30px;
+            text-transform: uppercase;
+        }
+        .hero-btn:hover {
+            background-color: #e0a800;
+            color: #000;
+        }
+
+        /* --- SECTIONS GENERAL --- */
+        .section-padding {
+            padding: 60px 0;
+        }
+        .section-title {
+            color: var(--hits-blue);
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--hits-gold);
+            margin-top: 10px;
+        }
+
+        /* --- CARDS (Societies) --- */
+        .society-card {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
+            border-top: 4px solid var(--hits-blue);
+        }
+        .society-card:hover {
+            transform: translateY(-5px);
+            border-top: 4px solid var(--hits-gold);
+        }
+        .society-icon {
+            font-size: 40px;
+            color: var(--hits-blue);
+            margin-bottom: 15px;
+        }
+
+        /* --- EVENTS & CLUBS --- */
+        .event-item {
+            border-left: 4px solid var(--hits-gold);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .date-badge {
+            background-color: var(--hits-blue);
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .club-list-item {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .club-list-item:hover {
+            background-color: var(--light-bg);
+            color: var(--hits-blue);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--hits-blue);
+            color: white;
+            padding: 50px 0 20px 0;
+        }
+        footer h5 {
+            color: var(--hits-gold);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        footer ul li {
+            margin-bottom: 10px;
+        }
+        footer a {
+            color: #ccc;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        footer a:hover {
+            color: var(--hits-gold);
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 40px;
+            padding-top: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between">
+            <div>
+                <span class="me-3"><i class="fas fa-phone-alt me-1"></i> +91-44-2747 4262</span>
+                <span><i class="fas fa-envelope me-1"></i> info@hindustanuniv.ac.in</span>
+            </div>
+            <div class="d-none d-md-block">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-university fa-lg me-2"></i> HITS IEEE
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About HITS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#student-branch">Student Branch</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">IEEE Societies</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#societies">Computer Society</a></li>
+                            <li><a class="dropdown-item" href="#societies">Robotics (RAS)</a></li>
+                            <li><a class="dropdown-item" href="#societies">WIE</a></li>
+                            <li><a class="dropdown-item" href="#societies">Power & Energy</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#events">Events & Clubs</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h1 class="display-4 fw-bold mb-4">Advancing Technology for Humanity</h1>
+                    <p class="lead mb-4">Welcome to the Official IEEE Student Branch of Hindustan Institute of Technology & Science.</p>
+                    <a href="#student-branch" class="btn hero-btn shadow">Explore Our Branch</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="about" class="section-padding">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-4">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="img-fluid rounded shadow" alt="HITS Campus">
+                </div>
+                <div class="col-md-6">
+                    <h2 class="section-title">About HITS</h2>
+                    <p class="lead text-primary fw-bold">Design Your Future at HITS</p>
+                    <p>Hindustan Institute of Technology and Science (HITS) is a prestigious institution located in Chennai, Tamil Nadu. Established in 1985, it is a Deemed-to-be University recognized by UGC and AICTE.</p>
+                    <p>With a vision "To make every man a success and no man a failure," HITS offers a wide spectrum of Undergraduate, Postgraduate, and Doctoral programs. The campus is known for its world-class infrastructure, international collaborations, and a strong focus on research and innovation.</p>
+                    <a href="https://hindustanuniv.ac.in/about_us.php" target="_blank" class="btn btn-outline-primary mt-3">Read Official History</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="student-branch" class="section-padding bg-light">
+        <div class="container text-center">
+            <h2 class="section-title">HITS IEEE Student Branch</h2>
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-8">
+                    <p>The IEEE Student Branch at HITS acts as a bridge between the students and the professional world. We are dedicated to the dissemination of knowledge and the development of technical skills among students.</p>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow-sm rounded">
+                        <i class="fas fa-users fa-3x text-warning mb-3"></i>
+                        <h4>500+ Members</h4>
+                        <p class="text-muted">An active community of aspiring engineers.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow-sm rounded">
+                        <i class="fas fa-calendar-check fa-3x text-warning mb-3"></i>
+                        <h4>50+ Events/Year</h4>
+                        <p class="text-muted">Workshops, Hackathons, and Guest Lectures.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow-sm rounded">
+                        <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
+                        <h4>Global Recognition</h4>
+                        <p class="text-muted">Winning awards at National IEEE forums.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="societies" class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Our IEEE Societies</h2>
+                <p class="text-muted">Specialized chapters focusing on cutting-edge technologies.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card society-card p-3">
+                        <div class="card-body text-center">
+                            <i class="fas fa-laptop-code society-icon"></i>
+                            <h5 class="card-title fw-bold">Computer Society</h5>
+                            <p class="card-text small">Driving the cutting edge of computer science technology and applications.</p>
+                            <a href="#" class="btn btn-sm btn-outline-dark">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card society-card p-3">
+                        <div class="card-body text-center">
+                            <i class="fas fa-robot society-icon"></i>
+                            <h5 class="card-title fw-bold">Robotics (RAS)</h5>
+                            <p class="card-text small">Fostering the development and application of robotics and automation.</p>
+                            <a href="#" class="btn btn-sm btn-outline-dark">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card society-card p-3">
+                        <div class="card-body text-center">
+                            <i class="fas fa-female society-icon"></i>
+                            <h5 class="card-title fw-bold">Women in Eng. (WIE)</h5>
+                            <p class="card-text small">Promoting women engineers and scientists, and inspiring girls worldwide.</p>
+                            <a href="#" class="btn btn-sm btn-outline-dark">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="card society-card p-3">
+                        <div class="card-body text-center">
+                            <i class="fas fa-bolt society-icon"></i>
+                            <h5 class="card-title fw-bold">Power & Energy</h5>
+                            <p class="card-text small">The world's largest forum for sharing the latest in electric power.</p>
+                            <a href="#" class="btn btn-sm btn-outline-dark">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="events" class="section-padding bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 mb-4">
+                    <h2 class="section-title">Upcoming Events</h2>
+                    
+                    <div class="event-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="date-badge">Oct 25, 2024</span>
+                                <h5 class="fw-bold mt-2">Annual Technical Symposium</h5>
+                                <p class="text-muted mb-0">A day-long event featuring paper presentations and technical quizzes. <br><small><i class="fas fa-map-marker-alt"></i> Main Auditorium</small></p>
+                            </div>
+                            <button class="btn btn-sm btn-warning">Register</button>
+                        </div>
+                    </div>
+
+                    <div class="event-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="date-badge">Nov 10, 2024</span>
+                                <h5 class="fw-bold mt-2">Intro to AI & Machine Learning</h5>
+                                <p class="text-muted mb-0">Workshop conducted by Computer Society Chapter. <br><small><i class="fas fa-map-marker-alt"></i> Lab 404</small></p>
+                            </div>
+                            <button class="btn btn-sm btn-warning">Register</button>
+                        </div>
+                    </div>
+
+                    <div class="event-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="date-badge">Dec 05, 2024</span>
+                                <h5 class="fw-bold mt-2">RoboWar 2024</h5>
+                                <p class="text-muted mb-0">Inter-college robotics competition. <br><small><i class="fas fa-map-marker-alt"></i> Open Air Theatre</small></p>
+                            </div>
+                            <button class="btn btn-sm btn-warning">Register</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <h2 class="section-title">Student Clubs</h2>
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white fw-bold">
+                            Active Technical Clubs
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item club-list-item">
+                                <i class="fas fa-code text-primary me-2"></i> <strong>Coding Club</strong>
+                                <p class="small text-muted mb-0 ps-4">Competitive coding and algorithm training.</p>
+                            </li>
+                            <li class="list-group-item club-list-item">
+                                <i class="fas fa-microchip text-primary me-2"></i> <strong>IoT Club</strong>
+                                <p class="small text-muted mb-0 ps-4">Building smart devices and sensors.</p>
+                            </li>
+                            <li class="list-group-item club-list-item">
+                                <i class="fas fa-camera text-primary me-2"></i> <strong>Media Club</strong>
+                                <p class="small text-muted mb-0 ps-4">Photography and event coverage.</p>
+                            </li>
+                            <li class="list-group-item club-list-item">
+                                <i class="fas fa-plane text-primary me-2"></i> <strong>Aero Club</strong>
+                                <p class="small text-muted mb-0 ps-4">Drone workshops and flight simulations.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Contact Us</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Hindustan Institute of Technology & Science<br>
+                    1, Rajiv Gandhi Salai (OMR), Padur,<br>
+                    (Via) Kelambakkam, Chennai - 603 103, India.</p>
+                    <p><i class="fas fa-phone me-2"></i> +91-44-2747 4262</p>
+                    <p><i class="fas fa-envelope me-2"></i> ieee@hindustanuniv.ac.in</p>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="https://hindustanuniv.ac.in/" target="_blank">Official HITS Website</a></li>
+                        <li><a href="https://www.ieee.org/" target="_blank">IEEE.org</a></li>
+                        <li><a href="#">Join IEEE HITS</a></li>
+                        <li><a href="#events">Upcoming Events</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <h5>Location</h5>
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3890.313100896796!2d80.2237603148216!3d12.82299299095361!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525a6c92736149%3A0x6a008b8b0870150e!2sHindustan%20Institute%20of%20Technology%20%26%20Science%20(HITS)!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 HITS IEEE Student Branch. All Rights Reserved. | Designed for HITS.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
