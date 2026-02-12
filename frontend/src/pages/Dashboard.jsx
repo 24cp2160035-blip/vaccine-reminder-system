@@ -58,9 +58,7 @@ export default function Dashboard() {
 
   const completed = displayVaccines.filter(v => v.status === "completed");
 
-  const nextVaccine = displayVaccines
-    .filter(v => v.status !== "completed")
-    .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))[0];
+  // Removed unused nextVaccine variable
 
   const upcomingTimeline = displayVaccines
     .filter(v => v.status !== "completed")
